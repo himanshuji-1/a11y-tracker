@@ -338,8 +338,8 @@ export default function IssueTable({ issues: initialIssues, scanRunId }: { issue
             {grouped.map((group) => {
               const colors = SEVERITY_COLORS[group.severity];
 
-              // Group this severity's issues by pageUrl for re-verify buttons
-              const pageUrls = [...new Set(group.issues.map((i) => i.pageUrl))];
+              // Find unique pageURLs in this severity group
+              const pageUrls = Array.from(new Set(group.issues.map((i) => i.pageUrl)));
 
               return (
                 <div key={group.severity}>

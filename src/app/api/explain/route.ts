@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,18 +65,18 @@ Also provide a corrected HTML/CSS code snippet fixing the issue.`;
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: { 
-        maxOutputTokens: 1000,
+        maxOutputTokens: 500,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "object",
+          type: SchemaType.OBJECT,
           properties: {
             explanation: {
-              type: "string",
-              description: "2-3 plain-English sentences explaining why this fails accessibility, who it affects (e.g. screen reader users, low-vision users, keyboard-only users), and the real-world impact."
+              type: SchemaType.STRING,
+              description: "A 2-3 sentence plain-English explanation of why this is an accessibility barrier."
             },
             fixSnippet: {
-              type: "string",
-              description: "A corrected code snippet showing the specific fix, as a single HTML/CSS snippet, no extra commentary."
+              type: SchemaType.STRING,
+              description: "A concrete code snippet demonstrating how to fix the issue."
             }
           },
           required: ["explanation", "fixSnippet"]

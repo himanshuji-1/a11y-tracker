@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 export async function POST(request: NextRequest) {
   try {
@@ -85,18 +85,18 @@ Write it in plain professional prose, 150-250 words, no headers or markdown form
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
-        maxOutputTokens: 2048,
+        maxOutputTokens: 1500,
         responseMimeType: "application/json",
         responseSchema: {
-          type: "object",
+          type: SchemaType.OBJECT,
           properties: {
             statementText: {
-              type: "string",
-              description: "The complete accessibility statement, 150-250 words, in plain professional prose ready to publish."
-            }
+              type: SchemaType.STRING,
+              description: "The full text of the accessibility statement.",
+            },
           },
-          required: ["statementText"]
-        }
+          required: ["statementText"],
+        },
       },
     });
 

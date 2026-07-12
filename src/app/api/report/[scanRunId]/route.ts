@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import puppeteer, { Browser } from "puppeteer";
+import { launchBrowser } from "@/lib/axe-scan";
+import { Browser } from "puppeteer";
 
 export async function GET(
   request: NextRequest,
@@ -28,11 +29,8 @@ export async function GET(
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const reportUrl = `${baseUrl}/report-print/${scanRunId}`;
 
-    // Launch Puppeteer to generate PDF
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    // Launch Browserless/Puppeteer to generate PDF
+    browser = await launchBrowser();
 
     const page = await browser.newPage();
     
@@ -64,19 +62,17 @@ export async function GET(
     const dateStr = new Date().toISOString().split('T')[0];
     const filename = `accessibility-report-${siteSlug}-${dateStr}.pdf`;
 
-    return new NextResponse(pdfBuffer, {
+    // Next.js NextResponse types sometimes complain about Buffer/Uint8Array in older Edge types, so we cast to any
+    return new NextResponse(pdfBuffer as any, {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="${filename}"`,
       },
     });
-  } catch (err) {
-    console.error("PDF generation failed:", err);
-    return NextResponse.json(
-      { error: "Failed to generate PDF report" },
-      { status: 500 }
-    );
+  } catch (e) {
+    console.error("PDF generation error:", e);
+    return NextResponse.json({ error: "Failed to generate PDF report" }, { status: 500 });
   } finally {
     if (browser) {
       try {
