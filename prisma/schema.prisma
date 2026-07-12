@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Site {
+  id        String    @id @default(cuid())
+  url       String
+  createdAt DateTime  @default(now())
+  scans     ScanRun[]
+}
+
+model ScanRun {
+  id             String    @id @default(cuid())
+  siteId         String
+  site           Site      @relation(fields: [siteId], references: [id])
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  pagesScanned   Int       @default(0)
+  score          Int?
+  statementText  String?
+  issues         Issue[]
+}
+
+model Issue {
+  id            String    @id @default(cuid())
+  scanRunId     String
+  scanRun       ScanRun   @relation(fields: [scanRunId], references: [id])
+  pageUrl       String
+  wcagCriterion String
+  severity      String    // "critical" | "serious" | "moderate" | "minor"
+  ruleId        String
+  description   String
+  htmlSnippet   String
+  status        String    @default("not_started") // not_started|in_progress|fixed|verified
+  firstDetected DateTime  @default(now())
+  lastVerified  DateTime?
+  explanation   String?
+  fixSnippet    String?
+}
