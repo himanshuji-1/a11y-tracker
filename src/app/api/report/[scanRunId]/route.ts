@@ -63,6 +63,7 @@ export async function GET(
     const filename = `accessibility-report-${siteSlug}-${dateStr}.pdf`;
 
     // Next.js NextResponse types sometimes complain about Buffer/Uint8Array in older Edge types, so we cast to any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new NextResponse(pdfBuffer as any, {
       status: 200,
       headers: {
