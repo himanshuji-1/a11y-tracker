@@ -81,6 +81,16 @@ export function readAxeSource(): string {
 
 // ── Launch Puppeteer with standard args ────────────────────────────────────
 export async function launchBrowser(): Promise<Browser> {
+  const browserlessToken = process.env.BROWSERLESS_TOKEN;
+
+  if (browserlessToken) {
+    console.log("Connecting to Browserless...");
+    return puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${browserlessToken}`,
+    });
+  }
+
+  console.log("Launching local Puppeteer...");
   return puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
