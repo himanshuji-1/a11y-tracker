@@ -77,7 +77,7 @@ export async function GET(
     if (browser) {
       try {
         await browser.close();
-      } catch (e) {
+      } catch {
         // Ignore close errors
       }
     }
