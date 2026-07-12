@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     });
 
     // ── Read axe-core from disk ───────────────────────────────────────
-    const axeSource = readAxeSource();
+    const axeSource = await readAxeSource();
 
     // ── Launch Puppeteer ──────────────────────────────────────────────
     browser = await launchBrowser();

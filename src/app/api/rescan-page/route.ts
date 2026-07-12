@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Run axe-core on the live page ───────────────────────────────────
-    const axeSource = readAxeSource();
+    const axeSource = await readAxeSource();
     browser = await launchBrowser();
     const page = await browser.newPage();
 

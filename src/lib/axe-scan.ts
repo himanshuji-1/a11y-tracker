@@ -1,6 +1,4 @@
 import puppeteer, { Browser } from "puppeteer";
-import fs from "fs";
-import path from "path";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -68,15 +66,15 @@ export async function scanPageWithAxe(
   return results.violations;
 }
 
-// ── Read axe-core source from disk ─────────────────────────────────────────
-export function readAxeSource(): string {
-  const axeCorePath = path.join(
-    process.cwd(),
-    "node_modules",
-    "axe-core",
-    "axe.min.js"
-  );
-  return fs.readFileSync(axeCorePath, "utf-8");
+// ── Fetch axe-core source from CDN ─────────────────────────────────────────
+export async function readAxeSource(): Promise<string> {
+  const res = await fetch("https://unpkg.com/axe-core@4.12.1/axe.min.js", {
+    cache: "force-cache"
+  });
+  if (!res.ok) {
+    throw new Error("Failed to load axe-core from CDN");
+  }
+  return res.text();
 }
 
 // ── Launch Puppeteer with standard args ────────────────────────────────────
