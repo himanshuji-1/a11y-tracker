@@ -25,8 +25,10 @@ export async function GET(
       return NextResponse.json({ error: "Scan not found" }, { status: 404 });
     }
 
-    // Determine base URL (handles localhost for dev, and deployed envs)
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    // Determine base URL dynamically based on environment
+    // Vercel sets VERCEL_PROJECT_PRODUCTION_URL and VERCEL_URL. Fallback to localhost for local dev.
+    const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+    const baseUrl = vercelHost ? `https://${vercelHost}` : (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000");
     const reportUrl = `${baseUrl}/report-print/${scanRunId}`;
 
     // Launch Browserless/Puppeteer to generate PDF

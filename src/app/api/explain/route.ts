@@ -65,7 +65,7 @@ Also provide a corrected HTML/CSS code snippet fixing the issue.`;
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: { 
-        maxOutputTokens: 500,
+        maxOutputTokens: 2048,
         responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
@@ -81,11 +81,16 @@ Also provide a corrected HTML/CSS code snippet fixing the issue.`;
           },
           required: ["explanation", "fixSnippet"]
         }
-      },
+      }
     });
 
-    const responseText = result.response.text();
-    const data = JSON.parse(responseText);
+    const response = await result.response;
+    let text = response.text();
+    
+    // Sometimes Gemini wraps JSON in markdown fences even with application/json
+    text = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "").trim();
+
+    const data = JSON.parse(text);
     
     const explanation = data.explanation;
     const fixSnippet = data.fixSnippet;
