@@ -1,27 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors */
+  --color-bg:             #05060f;
+  --color-surface:        #0d0e1a;
+  --color-surface-2:      #12131f;
+  --color-surface-3:      #1a1b2e;
+  --color-border:         rgba(186, 215, 247, 0.09);
+  --color-border-strong:  rgba(186, 215, 247, 0.18);
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #c7d3ea;
+  --color-text-muted:     #6b7a99;
+  --color-accent:         #4c8eff;
+  --color-accent-dim:     rgba(76, 142, 255, 0.12);
+  --color-accent-hover:   #6ba3ff;
+  --color-error:          #f87171;
+  --color-error-dim:      rgba(248, 113, 113, 0.08);
+
+  /* Typography */
+  --font-family:     'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs:    12px;
+  --font-size-sm:    13px;
+  --font-size-md:    15px;
+  --font-size-lg:    16px;
+  --font-size-xl:    24px;
+  --font-size-2xl:   32px;
+  --font-size-3xl:   44px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii */
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  10px;
+  --radius-xl:  14px;
+
+  /* Shadows */
+  --shadow-card:   rgba(186, 215, 247, 0.06) 0px 0px 0px 1px inset,
+                   rgba(6, 6, 14, 0.60) 0px 16px 40px 0px;
+  --shadow-input:  rgba(186, 215, 247, 0.06) 0px 0px 0px 1px inset;
+  --shadow-button: rgba(76, 142, 255, 0.22) 0px 1px 2px 0px inset;
+
+  /* Motion */
+  --duration-instant: 150ms;
+  --duration-fast:    250ms;
+  --duration-normal:  400ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Subtle dot-grid texture */
+  background-image:
+    radial-gradient(circle, rgba(186, 215, 247, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ── Focus visible ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Animation utility classes ─────────────────────────────────────────────── */
+.animate-fade-in-up {
+  animation: fadeInUp var(--duration-normal) ease both;
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--duration-fast) ease both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Staggered delay helpers */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: rgba(186,215,247,0.15); border-radius: 3px; }
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
 }
