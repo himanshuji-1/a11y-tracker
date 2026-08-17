@@ -837,43 +837,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* Responsive overrides */}
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        .sr-only {
-          position: absolute;
-          width: 1px; height: 1px;
-          padding: 0; margin: -1px;
-          overflow: hidden;
-          clip: rect(0,0,0,0);
-          white-space: nowrap;
-          border-width: 0;
-        }
-        @media (max-width: 768px) {
-          .hero-section {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
-            padding: 48px 20px 56px !important;
-          }
-          .hero-section > div:last-child {
-            display: none !important;
-          }
-          .how-it-works-grid {
-            grid-template-columns: 1fr 1fr !important;
-          }
-          .two-col-section {
-            grid-template-columns: 1fr !important;
-            gap: 32px !important;
-          }
-        }
-        @media (max-width: 480px) {
-          .how-it-works-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
